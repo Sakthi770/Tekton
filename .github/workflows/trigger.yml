@@ -24,6 +24,6 @@ jobs:
 
           # Trigger the workflow in the target repository
      
-          echo "repository=${TARGET_REPO}" >> $GITHUB_ENV
+          echo "repository=${TARGET_REPO}" >> $GITHUB_OUTPUT
          
-          echo "workflow=${TARGET_WORKFLOW_NAME}" >> $GITHUB_ENV
+          echo "workflow=${TARGET_WORKFLOW_NAME}" >> $GITHUB_OUTPUT
