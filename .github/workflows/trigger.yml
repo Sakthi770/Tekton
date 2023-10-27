@@ -23,7 +23,13 @@ jobs:
           TARGET_WORKFLOW_NAME="${TARGET_WORKFLOW_NAME}"
 
           # Trigger the workflow in the target repository
-     
-          echo "repository=${TARGET_REPO}" >> $GITHUB_OUTPUT
-         
-          echo "workflow=${TARGET_WORKFLOW_NAME}" >> $GITHUB_OUTPUT
+            echo "::set-output name=repository::${TARGET_REPO}"
+          
+            echo "::set-output name=workflow::${TARGET_WORKFLOW_NAME}"
+
+      - name: Set up GitHub CLI
+        run: echo "GH_TOKEN=${{ secrets.ORG_ADMIN_TOKEN }}" >> $GITHUB_ENV
+        
+      - name: Trigger Workflow
+        run: echo "Triggering ${{ steps.set-environment.outputs.workflow }}" && gh workflow run ${{ steps.set-environment.outputs.workflow }}
+          
