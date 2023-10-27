@@ -37,9 +37,10 @@ jobs:
               PAT_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}  # Personal Access Token with repo scope
               TARGET_REPO: https://github.com/Sakthi770/git-training/  # Replace with the name of the target repository
               TARGET_WORKFLOW_NAME: check-environment.yml  # Replace with the name of the workflow to trigger in the target repository
+              REPO_NAME: ${{ github.event.repository.name }}
             run: |
               # Authenticate using the PAT_TOKEN
               gh auth login --with-token <<< "${PAT_TOKEN}"
     
               # Trigger the workflow in the target repository
-              gh workflow run "$TARGET_WORKFLOW_NAME" -R "$TARGET_REPO" -r main
+              gh workflow run "$TARGET_WORKFLOW_NAME" -R "$TARGET_REPO" -f Repo=$REPO_NAME
