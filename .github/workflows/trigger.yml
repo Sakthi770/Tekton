@@ -42,4 +42,4 @@ jobs:
               gh auth login --with-token <<< "${PAT_TOKEN}"
     
               # Trigger the workflow in the target repository
-              gh workflow run -R "$TARGET_REPO" "$TARGET_WORKFLOW_NAME" --event push
+              gh workflow run "$TARGET_WORKFLOW_NAME" -R "$TARGET_REPO" -r main
