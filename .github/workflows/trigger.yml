@@ -34,12 +34,12 @@ jobs:
 
           - name: Trigger Target Repository Workflow
             env:
-              GITHUB_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}  # Personal Access Token with repo scope
+              PAT_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}  # Personal Access Token with repo scope
               TARGET_REPO: Sakthi770/git-training/  # Replace with the name of the target repository
               TARGET_WORKFLOW_NAME: check-environment.yml  # Replace with the name of the workflow to trigger in the target repository
             run: |
-              # Authenticate using the GITHUB_TOKEN
-              gh auth login --with-token <<< "${GITHUB_TOKEN}"
+              # Authenticate using the PAT_TOKEN
+              gh auth login --with-token <<< "${PAT_TOKEN}"
     
               # Trigger the workflow in the target repository
               gh workflow run -R "$TARGET_REPO" "$TARGET_WORKFLOW_NAME" --event push
