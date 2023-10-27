@@ -10,29 +10,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
 
-      - name: Trigger Target Repository Workflow
-        id: trigger-workflow
-        env:
-          TARGET_REPO: Sakthi770/git-training/  # Replace with the name of the target repository
-          TARGET_WORKFLOW_NAME: check-environment.yml  # Replace with the name of the workflow to trigger in the target repository
-        run: |
+      #- name: Trigger Target Repository Workflow
+       # id: trigger-workflow
+        #env:
+          #TARGET_REPO: Sakthi770/git-training/  # Replace with the name of the target repository
+          #TARGET_WORKFLOW_NAME: check-environment.yml  # Replace with the name of the workflow to trigger in the target repository
+        #run: |
           # Set up the target repository and workflow name
-          TARGET_REPO="${TARGET_REPO}"
-          TARGET_WORKFLOW_NAME="${TARGET_WORKFLOW_NAME}"
+          #TARGET_REPO="${TARGET_REPO}"
+          #TARGET_WORKFLOW_NAME="${TARGET_WORKFLOW_NAME}"
 
           # Trigger the workflow in the target repository
             #echo "::set-output name=repository::${TARGET_REPO}"
-            echo "{repository}=${TARGET_REPO}" >> $GITHUB_OUTPUT
+            #echo "{repository}=${TARGET_REPO}" >> $GITHUB_OUTPUT
           
             #echo "::set-output name=workflow::${TARGET_WORKFLOW_NAME}"
-            echo "{workflow}=${TARGET_WORKFLOW_NAME}" >> $GITHUB_OUTPUT
+            #echo "{workflow}=${TARGET_WORKFLOW_NAME}" >> $GITHUB_OUTPUT
 
-      - name: Set up GitHub CLI
-        run: echo "GH_TOKEN=${{ secrets.ORG_ADMIN_TOKEN }}" >> $GITHUB_ENV
+           #echo "GH_TOKEN=${{ secrets.ORG_ADMIN_TOKEN }}" >> $GITHUB_ENV
         
-      - name: Trigger Workflow
-        run: echo "Triggering ${{ steps.trigger-workflow.outputs.workflow }}" && gh workflow run ${{ steps.trigger-workflow.outputs.repository }}/${{ steps.trigger-workflow.outputs.workflow }}
-          
+           #echo "Triggering ${{ steps.trigger-workflow.outputs.workflow }}" && gh workflow run ${{ steps.trigger-workflow.outputs.repository }}/${{ steps.trigger-workflow.outputs.workflow }}
+
+          - name: Trigger Target Repository Workflow
+            env:
+              GITHUB_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}  # Personal Access Token with repo scope
+              TARGET_REPO: Sakthi770/git-training/  # Replace with the name of the target repository
+              TARGET_WORKFLOW_NAME: check-environment.yml  # Replace with the name of the workflow to trigger in the target repository
+            run: |
+              # Authenticate using the GITHUB_TOKEN
+              gh auth login --with-token <<< "${GITHUB_TOKEN}"
+    
+              # Trigger the workflow in the target repository
+              gh workflow run -R "$TARGET_REPO" "$TARGET_WORKFLOW_NAME" --event push
