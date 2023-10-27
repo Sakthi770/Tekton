@@ -1,82 +1,29 @@
-# This is a basic workflow to help you get started with Actions
+name: Trigger Target Repository Workflow
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  
+  push:
+    branches:
+      - main  # Replace with your branch name
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  trigger-target-workflow:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # it's necessary to get all the commits
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: Trigger Target Repository Workflow
+        env:
+          TARGET_REPO: Sakthi770/git-training  # Replace with the name of the target repository
+          TARGET_WORKFLOW_NAME: check-environment.yml  # Replace with the name of the workflow to trigger in the target repository
         run: |
-          cat file1.txt
-          ls -ltr
+          # Set up the target repository and workflow name
+          TARGET_REPO="${TARGET_REPO}"
+          TARGET_WORKFLOW_NAME="${TARGET_WORKFLOW_NAME}"
 
-      - name: Check awk
-        run: |
-         awk_path=$(which awk || true)
-         if [ -z "$awk_path" ]; then
-         echo "awk not found"
-         exit 1
-         else
-          echo "awk found at $awk_path"
-         fi
-        
-      - name: Get recently changed folder
-        id: getfolder
-        run: |
-          FOLDER1=$(git diff --dirstat=files,0 HEAD~1..HEAD | awk '{print $2}')
-          echo "$FOLDER1"
-          FOLDER=$(echo $FOLDER1 | awk -F/ 'BEGIN{OFS=FS} {NF--; print $0}')
-          echo "Newly changed folder is $FOLDER"
-          # echo "::set-output name=folder::$FOLDER"        
-          echo "FOLDER1=$FOLDER" >> $GITHUB_ENV
-          CI_PROJECT=$(echo $FOLDER | awk -F/ '{print $NF}')
-          echo "Project Name is $CI_PROJECT"
-
-      - name: Run script in new folder
-        run: |
-          echo "${{ github.workspace }}"
-          echo "${{ env.FOLDER1 }}"
-          cd ${{ github.workspace }}/${{ env.FOLDER1 }}
-
-      - name: Set directory
-        run: echo "DIRECTORY=${{ github.workspace }}/${{ env.FOLDER1 }}" >> $GITHUB_ENV
-
-      - name: Run script in new folder
-        run: |
-          cd ${{ env.DIRECTORY }} && echo "Now in $(pwd)"       
-          ls -ltr
-          export RATE_LIMIT_VALUE=$(yq eval '.azureRateLimit.noOfCalls' generate.yaml)
-          export RATE_RENEWAL_PERIOD=$(yq eval '.azureRateLimit.renewalPeriod' generate.yaml)
-          export RATE_LIMIT_COUNTER_KEY=$(yq eval '.azureRateLimit.counter' generate.yaml)
-          echo $RATE_LIMIT_VALUE
-
-          
-
-    
-    
-
-          
-          # PATH=$(git diff --dirstat=files,0 HEAD~1..HEAD | awk '{print $2}')
-         # FOLDER=$(echo $PATH | awk -F/ '{print $NF}')
-         # echo "Newly changed folder is $FOLDER"
-         # echo "FOLDER=$FOLDER" >> $GITHUB_ENV
+          # Trigger the workflow in the target repository
+     
+          echo "repository=${TARGET_REPO}" >> $GITHUB_ENV
+         
+          echo "workflow=${TARGET_WORKFLOW_NAME}" >> $GITHUB_ENV
